@@ -1,0 +1,27 @@
+{
+  "port": 8080,
+  "debug": true,
+  "auth": {
+    "*": ["home", "switch"]
+  },
+  "server": {
+    "configPath": "/etc/shadowsocks.json",
+    "stopCmd": "/data/scripts/stop-shadowsocks.sh",
+    "startCmd": "/data/scripts/start-shadowsocks.sh"
+  },
+  "peers": [
+    {
+      "name": "Japan",
+      "address": "1.2.3.4",
+      "password": "pass",
+      "method": "aes-256-cfb",
+      "port": 443
+    }, {
+      "name": "HongKong",
+      "address": "2.3.4.5",
+      "password": "pass",
+      "method": "aes-256-cfb",
+      "port": 443
+    }
+  ]
+}

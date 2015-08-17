@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Catapult</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript">
+        function switchTo(name) {
+            if (!confirm('Sure to switch peer to ' + name + ' ?')) {
+                return;
+            }
+            window.location.href = '/switch?name=' + name;
+        }
+
+        function reconnect() {
+            if (!confirm('Sure to reconnect to peer?')) {
+                return;
+            }
+            $("#btReconnect")[0].disabled = true;
+            $.getJSON('/reconnect', function(json) {
+                if (!!json.error) {
+                    alert('Error: ' + JSON.stringify(json.error));
+                } else {
+                    alert('Success!');
+                }
+            }).fail(function() {
+                alert('Error getting response from server!')
+            }).always(function() {
+                $("#btReconnect")[0].disabled = false;
+            });
+        }
+    </script>
+</head>
+<body>
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Catapult</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><%=user%></a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
+
+        <h2>Server Control</h2>
+        <button type="button" class="btn btn-success" onclick="reconnect()" id="btReconnect">Reconnect</button>
+
+        <h2>Peer List</h2>
+        <table class="table">
+            <thead>
+            <tr><th>Name</th><th>Address</th><th>Port</th><th>Response Time</th><th>Loss Rate</th><td></td></tr>
+            </thead>
+            <tbody>
+            <% for (var i=0; i<servers.length; i++) { var server = servers[i]; %>
+            <tr
+                    <%if (server.active) {%>class="bg-primary"<%}%>
+                    >
+                <td><%=server.conf.name%></td>
+                <td><%=server.conf.address%></td>
+                <td><%=server.conf.port%></td>
+                <td><%=sprintf.sprintf('%.2f ms', server.avgPingTime)%></td>
+                <td><%=sprintf.sprintf('%.2f %%', server.lossRate * 100)%></td>
+                <td>
+                    <% if (!server.active) { %>
+                    <button type="button" class="btn btn-success" onclick="switchTo('<%=server.conf.name%>')">Switch to this</button>
+                    <% } %>
+                </td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+
+    </div>
+
+</div> <!-- /container -->
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>
