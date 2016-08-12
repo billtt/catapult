@@ -34,7 +34,7 @@ router.get('/switch', function(req, res) {
     if (!!server) {
         SysService.updateConf(server.conf);
         PeerService.setActiveServer(server.conf.address, server.conf.port);
-        SysService.reconnect(function(err) {
+        SysService.reconnect(server, function(err) {
             res.redirect('/home');
         });
     } else {
@@ -44,7 +44,7 @@ router.get('/switch', function(req, res) {
 
 router.get('/reconnect', function(req, res) {
     var json = {};
-    SysService.reconnect(function(err) {
+    SysService.reconnect(PeerService.getActiveServer(), function(err) {
         json.error = err;
         res.end(JSON.stringify(json));
     });

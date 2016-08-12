@@ -16,6 +16,7 @@ PeerService.servers = servers;
 var pingSession = null;
 const PING_TIMEOUT = 2000;
 const PING_COUNT = 100;
+var activeServer = null;
 
 function init() {
     var list = config.get('peers');
@@ -44,6 +45,7 @@ PeerService.setActiveServer = function(address, port) {
         var server = servers[i];
         if (server.conf.address === address && server.conf.port === port) {
             server.active = true;
+            activeServer = server;
         } else {
             server.active = false;
         }
@@ -58,6 +60,10 @@ PeerService.findByName = function(name) {
         }
     }
     return null;
+};
+
+PeerService.getActiveServer = function() {
+    return activeServer;
 };
 
 function updatePingStats(server, time) {

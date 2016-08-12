@@ -30,13 +30,13 @@ SysService.updateConf = function(conf) {
     fs.writeFileSync(config.get('server.configPath'), JSON.stringify(SysService.shadowConf));
 };
 
-SysService.reconnect = function(callback) {
+SysService.reconnect = function(server, callback) {
     var conf = config.get('server');
     exec(conf.stopCmd, function(err, stdout, stderr) {
         if (err) {
             return callback(stderr);
         }
-        exec(conf.startCmd, function(err, stdout, stderr) {
+        exec(conf.startCmd + ' ' + server.conf.dns, function(err, stdout, stderr) {
             if (err) {
                 callback(stderr);
             } else {

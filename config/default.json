@@ -15,13 +15,15 @@
       "address": "1.2.3.4",
       "password": "pass",
       "method": "aes-256-cfb",
-      "port": 443
+      "port": 443,
+      "dns": "8.8.4.4:53"
     }, {
       "name": "HongKong",
       "address": "2.3.4.5",
       "password": "pass",
       "method": "aes-256-cfb",
-      "port": 443
+      "port": 443,
+      "dns": "8.8.4.4:53"
     }
   ]
 }
