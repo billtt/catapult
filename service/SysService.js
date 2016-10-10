@@ -34,7 +34,7 @@ SysService.reconnect = function(server, callback) {
     var conf = config.get('server');
     exec(conf.stopCmd, function(err, stdout, stderr) {
         if (err) {
-            return callback(stderr);
+            console.warn('Error running stop script: ' + stderr);
         }
         exec(conf.startCmd + ' ' + server.conf.dns, function(err, stdout, stderr) {
             if (err) {
